@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Link, Navigate } from 'react-router-dom';
-import Auth from './components/Auth';
-import Dashboard from './components/Dashboard';
-import Chat from './components/Chat';
-import StoryViewer from './components/StoryViewer';
+import Auth from './components/Auth/Auth';
+import Dashboard from './components/Dashboard/Dashboard';
+import Chat from './components/Chat/Chat';
+import StoryViewer from './components/StoryViewer/StoryViewer';
 import logoImage from './assets/script.png'; 
 
 function App() {

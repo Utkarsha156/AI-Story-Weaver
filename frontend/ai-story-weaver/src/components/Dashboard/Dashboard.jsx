@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import apiClient from '../api'; 
+import apiClient from '../../api'; 
+import "./dashboard.css";
 
 const Dashboard = ({ token }) => {
     const [stories, setStories] = useState([]);

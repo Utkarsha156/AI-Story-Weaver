@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import apiClient from '../api';
+import apiClient from '../../api';
+import "./storyviewer.css";
 
 const StoryViewer = ({ token }) => {
     const { storyId } = useParams();

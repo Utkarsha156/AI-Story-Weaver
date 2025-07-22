@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import "./auth.css";
 
 const API_URL = 'http://localhost:5000/api/auth';
 
