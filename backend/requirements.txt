@@ -17,3 +17,4 @@ typing_extensions
 typing-inspection
 urllib3
 Werkzeug
+gunicorn
