@@ -2,7 +2,7 @@
 
 AI StoryWeaver is a full-stack web application where users interact with an AI through a chat-like interface to generate a **10-page illustrated story**. The system intelligently asks follow-up questions based on missing story details and uses text and image generation models to craft an engaging, country-themed (Indian) story—streamed page by page.
 
----
+
 
 ## Folder Structure
 
@@ -42,12 +42,14 @@ AI STORY/
 ```
 
 ## Screenshots
+<img width="1915" height="1011" alt="Screenshot 2025-07-23 233615" src="https://github.com/user-attachments/assets/8f93ecd8-9ba7-40b9-ad08-374e5415fb34" />
+<img width="1919" height="1014" alt="Screenshot 2025-07-23 233805" src="https://github.com/user-attachments/assets/c377da1e-b365-47ae-842e-778da7962c40" />
+<img width="1919" height="1015" alt="Screenshot 2025-07-23 234134" src="https://github.com/user-attachments/assets/7eac0a35-2eff-4511-9f39-3aa95542e7c1" />
+<img width="1919" height="1020" alt="Screenshot 2025-07-23 233909" src="https://github.com/user-attachments/assets/de96e00b-fa5a-493c-8f95-92582b46a906" />
+<img width="1919" height="1023" alt="Screenshot 2025-07-23 233847" src="https://github.com/user-attachments/assets/b63a2554-ddc9-430b-9ab7-d36e19626343" />
 
-> - Chat interface
-> - Story Viewer
-> - Dashboard
 
----
+
 
 ## Features
 
@@ -58,7 +60,8 @@ AI STORY/
 - Previous stories viewer with text & image layout
 - Download full story as PDF
 
----
+
+
 
 ## Tech Stack
 
@@ -70,7 +73,7 @@ AI STORY/
 | LLM Models   | LLaMA 3 (via Groq API), Stable Diffusion XL (via Hugging Face API) |
 
 
----
+
 
 ## Database Schema (PostgreSQL)
 
@@ -107,7 +110,7 @@ CREATE TABLE story_pages (
 );
 ```
 
----
+
 
 
 ##  Getting Started
@@ -150,7 +153,7 @@ npm install
 npm run dev
 ```
 
----
+
 
 ## API Endpoints
 
@@ -163,7 +166,7 @@ npm run dev
 | GET    | `/api/story/<story_id>` | Fetch story and its pages              |
 
 
----
+
 
 
 ## Testing Tips
