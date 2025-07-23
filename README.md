@@ -142,7 +142,6 @@ FRONTEND_URL=http://localhost:5173
 
 ```
 ```
-
 Then run the backend:
 
 ```bash
