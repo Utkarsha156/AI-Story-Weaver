@@ -21,7 +21,7 @@ const StoryViewer = ({ token }) => {
             if (eventSourceRef.current) {
                 return; // Don't start a new one if it already exists
             }
-            const newEventSource = new EventSource(`http://localhost:5000/api/story/${storyId}/generate?jwt=${token}`);
+            const newEventSource = new EventSource(`https://ai-story-weaver.onrender.com/api/story/${storyId}/generate?jwt=${token}`);
             eventSourceRef.current = newEventSource;
             setStatus('generating');
 
@@ -104,7 +104,7 @@ const StoryViewer = ({ token }) => {
 
     const ImageDisplay = ({ imageUrl, pageNum }) => {
         if (imageUrl) {
-            return <img src={`http://localhost:5000${imageUrl}`} alt={`Illustration for page ${pageNum}`} className="story-viewer-image" />;
+            return <img src={`https://ai-story-weaver.onrender.com${imageUrl}`} alt={`Illustration for page ${pageNum}`} className="story-viewer-image" />;
         }
         return (
             <div className="story-viewer-image-placeholder">

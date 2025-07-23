@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
-import axios from 'axios';
+import apiClient from '../../api'; // Use the configured API client instead of axios directly
 import "./auth.css";
-
-const API_URL = 'http://localhost:5000/api/auth';
 
 const Auth = ({ setToken }) => {
     const [isLogin, setIsLogin] = useState(true);
@@ -10,24 +8,37 @@ const Auth = ({ setToken }) => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
+    const [loading, setLoading] = useState(false);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         setError('');
-        const endpoint = isLogin ? '/login' : '/register';
+        setLoading(true);
+        
+        const endpoint = isLogin ? '/auth/login' : '/auth/register';
         const payload = isLogin ? { username, password } : { username, email, password };
 
         try {
             if (!isLogin) {
-                await axios.post(`${API_URL}${endpoint}`, payload);
+                // Registration
+                await apiClient.post(endpoint, payload);
                 alert('Registration successful! Please log in.');
                 setIsLogin(true);
+                setPassword(''); // Clear password field
             } else {
-                const response = await axios.post(`${API_URL}${endpoint}`, payload);
+                // Login
+                const response = await apiClient.post(endpoint, payload);
                 setToken(response.data.access_token);
             }
         } catch (err) {
-            setError(err.response?.data?.msg || 'An error occurred.');
+            console.error('Auth error:', err);
+            setError(
+                err.response?.data?.msg || 
+                err.response?.data?.message || 
+                'An error occurred. Please try again.'
+            );
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -43,6 +54,7 @@ const Auth = ({ setToken }) => {
                         value={username}
                         onChange={(e) => setUsername(e.target.value)}
                         required
+                        disabled={loading}
                     />
                     {!isLogin && (
                         <input
@@ -51,6 +63,7 @@ const Auth = ({ setToken }) => {
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
                             required
+                            disabled={loading}
                         />
                     )}
                     <input
@@ -59,11 +72,22 @@ const Auth = ({ setToken }) => {
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                         required
+                        disabled={loading}
                     />
-                    <button type="submit">{isLogin ? 'Login' : 'Create Account'}</button>
+                    <button type="submit" disabled={loading}>
+                        {loading ? 'Please wait...' : (isLogin ? 'Login' : 'Create Account')}
+                    </button>
                 </form>
                 <div className="auth-toggle">
-                    <button onClick={() => setIsLogin(!isLogin)}>
+                    <button 
+                        type="button"
+                        onClick={() => {
+                            setIsLogin(!isLogin);
+                            setError('');
+                            setPassword('');
+                        }}
+                        disabled={loading}
+                    >
                         {isLogin ? 'Need an account? Register' : 'Have an account? Login'}
                     </button>
                 </div>

@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,700;1,400&family=Playfair+Display:wght@700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,700;1,400&family=Playfair+Display:wght@400;600;700&display=swap');
 
 :root {
   --bg-color: #f5e1c9;
@@ -6,26 +6,51 @@
   --secondary-text: #6b4f3a;
   --accent-color: #c58940;
   --accent-color-hover: #a87236;
+  --accent-color-light: #d4955a;
   --error-color: #c0392b;
+  --success-color: #27ae60;
   --border-color: #e2d1bd;
-  --container-bg: rgba(255, 255, 255, 0.6);
-  --input-bg: rgba(255, 255, 255, 0.8);
+  --container-bg: rgba(255, 255, 255, 0.85);
+  --input-bg: rgba(255, 255, 255, 0.9);
+  --shadow-light: 0 4px 15px rgba(0, 0, 0, 0.08);
+  --shadow-medium: 0 8px 25px rgba(0, 0, 0, 0.12);
+  --shadow-heavy: 0 12px 35px rgba(0, 0, 0, 0.15);
+  --border-radius: 12px;
+  --border-radius-small: 8px;
+  --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /* Base and Layout */
-html, body {
-  margin: 0;
-  font-family: 'Lora', serif;
-  background-color: var(--bg-color);
-  background-image: url("https://www.transparenttextures.com/patterns/graphy.png");
-  color: var(--primary-text);
-  scrollbar-width: none;
-  -ms-overflow-style: none;  
+* {
+  box-sizing: border-box;
 }
 
-html::-webkit-scrollbar,
-body::-webkit-scrollbar {
-  display: none;
+html, body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Lora', serif;
+  background-color: var(--bg-color);
+  background-image: 
+    radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.03) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
+    url("https://www.transparenttextures.com/patterns/graphy.png");
+  color: var(--primary-text);
+  line-height: 1.6;
+  scrollbar-width: thin;
+  scrollbar-color: var(--accent-color) transparent;
+}
+
+html::-webkit-scrollbar {
+  width: 6px;
+}
+
+html::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+html::-webkit-scrollbar-thumb {
+  background-color: var(--accent-color);
+  border-radius: 3px;
 }
 
 #root {
@@ -36,22 +61,27 @@ body::-webkit-scrollbar {
 
 .container {
   width: 100%;
-  max-width: 1200px;
+  max-width: 1400px;
   margin: 0 auto;
   padding: 2rem 1rem;
   box-sizing: border-box;
 }
 
-/* Header & Logo */
+/* Header & Logo - Responsive */
 .app-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0.5rem 2rem;
-  background-color: var(--container-bg);
-  backdrop-filter: blur(10px);
+  padding: 1rem 2rem;
+  background: var(--container-bg);
+  backdrop-filter: blur(20px);
   border-bottom: 1px solid var(--border-color);
+  box-shadow: var(--shadow-light);
+  position: sticky;
+  top: 0;
+  z-index: 100;
 }
+
 .logo {
   font-family: 'Playfair Display', serif;
   color: var(--secondary-text);
@@ -59,25 +89,138 @@ body::-webkit-scrollbar {
   display: flex;
   align-items: center;
   gap: 1rem;
+  transition: var(--transition);
 }
-.logo-image { height: 40px; width: auto; }
-.logo h1 { font-size: 1.8rem; margin: 0; }
+
+.logo:hover {
+  color: var(--accent-color);
+  transform: translateY(-1px);
+}
+
+.logo-image { 
+  height: 40px; 
+  width: auto;
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
+}
+
+.logo h1 { 
+  font-size: 1.8rem; 
+  margin: 0; 
+  font-weight: 600;
+}
+
 .app-header nav button {
   background-color: transparent;
   border: 2px solid var(--accent-color);
   color: var(--accent-color);
-  font-weight: bold;
-  padding: 0.5rem 1rem;
-  border-radius: 5px;
+  font-weight: 600;
+  padding: 0.75rem 1.5rem;
+  border-radius: var(--border-radius-small);
   cursor: pointer;
-  transition: all 0.2s ease-in-out;
+  transition: var(--transition);
+  font-family: inherit;
+  font-size: 0.95rem;
 }
+
 .app-header nav button:hover {
   background-color: var(--accent-color);
   color: white;
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-light);
 }
 
+/* Loading States */
+.loading-spinner, .generating-notice {
+  text-align: center;
+  padding: 4rem 2rem;
+  font-size: 1.3rem;
+  color: var(--secondary-text);
+  background: var(--container-bg);
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow-light);
+  margin: 2rem auto;
+  max-width: 600px;
+}
 
+.loading-spinner::after {
+  content: '';
+  display: block;
+  width: 40px;
+  height: 40px;
+  margin: 1rem auto;
+  border: 3px solid var(--border-color);
+  border-top: 3px solid var(--accent-color);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
 
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
 
+.error-message { 
+  color: var(--error-color); 
+  text-align: center; 
+  margin-bottom: 1rem; 
+  padding: 1rem;
+  background: rgba(192, 57, 43, 0.1);
+  border: 1px solid rgba(192, 57, 43, 0.2);
+  border-radius: var(--border-radius-small);
+}
 
+/* Responsive Design */
+@media (max-width: 768px) {
+  .app-header {
+    padding: 0.75rem 1rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+  
+  .logo h1 {
+    font-size: 1.4rem;
+  }
+  
+  .logo-image {
+    height: 32px;
+  }
+  
+  .container {
+    padding: 1rem 0.75rem;
+  }
+  
+  .app-header nav button {
+    padding: 0.6rem 1.2rem;
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .app-header {
+    padding: 0.5rem 0.75rem;
+  }
+  
+  .logo {
+    gap: 0.75rem;
+  }
+  
+  .logo h1 {
+    font-size: 1.2rem;
+  }
+  
+  .logo-image {
+    height: 28px;
+  }
+  
+  .container {
+    padding: 0.75rem 0.5rem;
+  }
+}
+
+/* High DPI Displays */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  .logo-image {
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: crisp-edges;
+  }
+}
