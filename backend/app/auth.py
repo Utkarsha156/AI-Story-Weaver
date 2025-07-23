@@ -33,7 +33,7 @@ def login():
     user = User.query.filter_by(username=username).first()
 
     if user and user.check_password(password):
-        access_token = create_access_token(identity={'id': user.id, 'username': user.username})
+        access_token = create_access_token(identity=str(user.id))
         return jsonify(access_token=access_token)
 
     return jsonify({"msg": "Bad username or password"}), 401
@@ -41,6 +41,6 @@ def login():
 @auth_bp.route('/profile', methods=['GET'])
 @jwt_required()
 def profile():
-    current_user_identity = get_jwt_identity()
-    user = User.query.get(current_user_identity['id'])
+    current_user_id = get_jwt_identity()
+    user = User.query.get(int(current_user_id))
     return jsonify(user.to_dict()), 200

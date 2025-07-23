@@ -20,7 +20,7 @@ def handle_chat():
     data = request.get_json()
     user_message = data.get('message')
     story_id = data.get('story_id')
-    current_user_id = get_jwt_identity()['id']
+    current_user_id = int(get_jwt_identity())
 
     if not user_message:
         return jsonify({"error": "No message provided"}), 400
@@ -72,6 +72,10 @@ def generate_story_stream(story_id):
     def generate():
         try:
             story = Story.query.get_or_404(story_id)
+            current_user_id = int(get_jwt_identity())
+            if story.user_id != current_user_id:
+                yield f"data: {json.dumps({'error': 'Unauthorized'})}\n\n"
+                return
             
             if story.pages:
                 story.status = 'completed'
@@ -117,21 +121,21 @@ def generate_story_stream(story_id):
 @main_bp.route('/stories', methods=['GET'])
 @jwt_required()
 def get_user_stories():
-    current_user_id = get_jwt_identity()['id']
+    current_user_id = int(get_jwt_identity())
     stories = Story.query.filter_by(user_id=current_user_id).order_by(Story.created_at.desc()).all()
     return jsonify([s.to_dict() for s in stories]), 200
 
 @main_bp.route('/story/<int:story_id>', methods=['GET'])
 @jwt_required()
 def get_story_details(story_id):
-    current_user_id = get_jwt_identity()['id']
+    current_user_id = int(get_jwt_identity())
     story = Story.query.filter_by(id=story_id, user_id=current_user_id).first_or_404()
     return jsonify(story.to_dict(include_pages=True))
 
 @main_bp.route('/story/<int:story_id>/pdf', methods=['GET'])
 @jwt_required()
 def download_story_pdf(story_id):
-    current_user_id = get_jwt_identity()['id']
+    current_user_id = int(get_jwt_identity())
     story = Story.query.filter_by(id=story_id, user_id=current_user_id).first_or_404()
     
     if story.status != 'completed':
