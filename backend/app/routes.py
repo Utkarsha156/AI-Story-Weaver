@@ -1,4 +1,4 @@
-import json
+import json # Import the json library
 from flask import Blueprint, request, jsonify, Response, stream_with_context, send_file
 from .models import Story, StoryPage
 from . import story_generator
@@ -10,9 +10,14 @@ from threading import Lock
 
 main_bp = Blueprint('main_bp', __name__)
 
-# A dictionary to keep track of which stories are currently being generated
 generation_locks = {}
 story_lock = Lock()
+
+def get_current_user_id():
+    """Helper function to decode the JWT identity."""
+    identity_string = get_jwt_identity()
+    identity_data = json.loads(identity_string)
+    return identity_data['id']
 
 @main_bp.route('/chat', methods=['POST'])
 @jwt_required()
@@ -20,7 +25,7 @@ def handle_chat():
     data = request.get_json()
     user_message = data.get('message')
     story_id = data.get('story_id')
-    current_user_id = get_jwt_identity()['id']
+    current_user_id = get_current_user_id() # Use the helper function
 
     if not user_message:
         return jsonify({"error": "No message provided"}), 400
@@ -60,15 +65,12 @@ def handle_chat():
 def generate_story_stream(story_id):
     with story_lock:
         if story_id in generation_locks:
-            print(f"STORY {story_id} GENERATION ALREADY IN PROGRESS. SKIPPING DUPLICATE REQUEST.")
-            return Response(status=409) # 409 Conflict
+            return Response(status=409)
         generation_locks[story_id] = True
-    
 
     def generate():
         try:
             story = Story.query.get_or_404(story_id)
-            
             if story.pages:
                 story.status = 'completed'
                 db.session.commit()
@@ -102,33 +104,30 @@ def generate_story_stream(story_id):
             db.session.commit()
             yield f"data: {json.dumps({'status': 'completed'})}\n\n"
         finally:
-            # --- Unlock the story after generation is done (or if it fails) ---
             with story_lock:
                 if story_id in generation_locks:
                     del generation_locks[story_id]
-            # -------------------------------------------------------------
 
     return Response(stream_with_context(generate()), mimetype='text/event-stream')
-
 
 @main_bp.route('/stories', methods=['GET'])
 @jwt_required()
 def get_user_stories():
-    current_user_id = get_jwt_identity()['id']
-    stories = Story.query.filter_by(user_id=current_user_id).order_by(Story.created_at.asc()).all()
+    current_user_id = get_current_user_id() # Use the helper function
+    stories = Story.query.filter_by(user_id=current_user_id).order_by(Story.created_at.desc()).all()
     return jsonify([s.to_dict() for s in stories]), 200
 
 @main_bp.route('/story/<int:story_id>', methods=['GET'])
 @jwt_required()
 def get_story_details(story_id):
-    current_user_id = get_jwt_identity()['id']
+    current_user_id = get_current_user_id() # Use the helper function
     story = Story.query.filter_by(id=story_id, user_id=current_user_id).first_or_404()
     return jsonify(story.to_dict(include_pages=True))
 
 @main_bp.route('/story/<int:story_id>/pdf', methods=['GET'])
 @jwt_required()
 def download_story_pdf(story_id):
-    current_user_id = get_jwt_identity()['id']
+    current_user_id = get_current_user_id() # Use the helper function
     story = Story.query.filter_by(id=story_id, user_id=current_user_id).first_or_404()
     
     if story.status != 'completed':

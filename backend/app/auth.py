@@ -33,7 +33,8 @@ def login():
     user = User.query.filter_by(username=username).first()
 
     if user and user.check_password(password):
-        access_token = create_access_token(identity={'id': user.id, 'username': user.username})
+        identity_data = {'id': user.id, 'username': user.username}
+        access_token = create_access_token(identity=json.dumps(identity_data))
         return jsonify(access_token=access_token)
 
     return jsonify({"msg": "Bad username or password"}), 401
