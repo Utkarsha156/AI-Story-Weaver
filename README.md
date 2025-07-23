@@ -31,17 +31,9 @@ AI STORY/
 │   │   │   └── styles.css
 │   │   ├── components/
 │   │   │   ├── Auth/
-│   │   │   │   ├── Auth.jsx
-│   │   │   │   └── auth.css
 │   │   │   ├── Chat/
-|   |   |   |   ├── Chat.jsx
-│   │   │   │   └── chat.css
 │   │   │   ├── Dashboard/
-│   │   │   │   ├── Dashboard.jsx
-│   │   │   │   └── dashboard.css
 │   │   │   └── StoryViewer/
-│   │   │       ├── StoryViewer.jsx
-│   │   │       └── storyviewer.css
 │   │   ├── api.js
 │   │   ├── App.jsx
 │   │   └── main.jsx
