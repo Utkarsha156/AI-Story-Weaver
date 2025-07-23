@@ -7,7 +7,7 @@ from .extensions import db, jwt
 def create_app():
     # Load environment variables in development
     if os.environ.get('FLASK_ENV') != 'production':
-        dotenv_path = os.path.join(os.path.dirname(_file_), '..', '.env')
+        dotenv_path = os.path.join(os.path.dirname(__file__), '..', '.env')
         load_dotenv(dotenv_path=dotenv_path)
 
     app = Flask(__name__, static_folder='../static')
