@@ -20,7 +20,7 @@
   --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Base and Layout */
+
 * {
   box-sizing: border-box;
 }
@@ -67,7 +67,7 @@ html::-webkit-scrollbar-thumb {
   box-sizing: border-box;
 }
 
-/* Header & Logo - Responsive */
+
 .app-header {
   display: flex;
   justify-content: space-between;
@@ -217,7 +217,6 @@ html::-webkit-scrollbar-thumb {
   }
 }
 
-/* High DPI Displays */
 @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
   .logo-image {
     image-rendering: -webkit-optimize-contrast;

@@ -10,16 +10,16 @@ const StoryViewer = ({ token }) => {
     const [currentPageIndex, setCurrentPageIndex] = useState(0);
     const [status, setStatus] = useState('loading');
     const [error, setError] = useState('');
-    const eventSourceRef = useRef(null); // Use a ref to hold the event source
+    const eventSourceRef = useRef(null); 
 
     useEffect(() => {
         
-        // This ensures the generation process is only ever started once.
-        let isMounted = true; // Flag to check if component is still mounted
+        
+        let isMounted = true; 
 
         const startEventSource = () => {
             if (eventSourceRef.current) {
-                return; // Don't start a new one if it already exists
+                return; 
             }
             const newEventSource = new EventSource(`https://ai-story-weaver.onrender.com/api/story/${storyId}/generate?jwt=${token}`);
             eventSourceRef.current = newEventSource;

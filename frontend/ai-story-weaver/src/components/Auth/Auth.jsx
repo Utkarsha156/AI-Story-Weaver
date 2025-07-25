@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import apiClient from '../../api'; // Use the configured API client instead of axios directly
+import apiClient from '../../api'; 
 import "./auth.css";
 
 const Auth = ({ setToken }) => {
@@ -20,13 +20,13 @@ const Auth = ({ setToken }) => {
 
         try {
             if (!isLogin) {
-                // Registration
+                
                 await apiClient.post(endpoint, payload);
                 alert('Registration successful! Please log in.');
                 setIsLogin(true);
-                setPassword(''); // Clear password field
+                setPassword(''); 
             } else {
-                // Login
+                
                 const response = await apiClient.post(endpoint, payload);
                 setToken(response.data.access_token);
             }

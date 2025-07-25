@@ -52,7 +52,7 @@ const Chat = ({ token }) => {
 
     const handleKeyPress = (e) => {
         if (e.key === 'Enter' && !e.shiftKey) {
-          e.preventDefault(); // Prevents adding a new line
+          e.preventDefault(); 
           sendMessage();
         }
     };

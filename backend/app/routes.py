@@ -10,7 +10,7 @@ from threading import Lock
 
 main_bp = Blueprint('main_bp', __name__)
 
-# This lock prevents the 20-page bug
+
 generation_locks = {}
 story_lock = Lock()
 
@@ -61,13 +61,13 @@ def handle_chat():
 @main_bp.route('/story/<int:story_id>/generate', methods=['GET'])
 @jwt_required()
 def generate_story_stream(story_id):
-    # --- THIS IS THE FIX for the 20-page/duplicate content bug ---
+   
     with story_lock:
         if story_id in generation_locks:
             print(f"STORY {story_id} GENERATION ALREADY IN PROGRESS. SKIPPING DUPLICATE REQUEST.")
-            return Response(status=409) # 409 Conflict indicates a duplicate request
+            return Response(status=409) 
         generation_locks[story_id] = True
-    # ----------------------------------------------------------------
+    
 
     def generate():
         try:
@@ -110,11 +110,11 @@ def generate_story_stream(story_id):
             db.session.commit()
             yield f"data: {json.dumps({'status': 'completed'})}\n\n"
         finally:
-            # --- Unlock the story after generation is done (or if it fails) ---
+           
             with story_lock:
                 if story_id in generation_locks:
                     del generation_locks[story_id]
-            # -------------------------------------------------------------
+           
 
     return Response(stream_with_context(generate()), mimetype='text/event-stream')
 
